@@ -64,3 +64,72 @@ function getTranslation(code, type, getDescription = false) {
   <Footer />
   <div class="py-[16px]"></div>
 </Layout>
+
+<script>
+  import $ from "jquery";
+
+  // CONFIGURATION:
+  let enableScrolling = true;
+
+  if (enableScrolling) {
+    $(document).ready(function () {
+      var isNotScrolling = true;
+      var ort = 0;
+
+      function scrollDone() {
+        // alert("Scroll Done")
+        setTimeout(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        }, 5000);
+        setTimeout(() => {
+          window.location.reload();
+        }, 6000);
+      }
+
+      function scrollDownUntilEndOfPage() {
+        if (isNotScrolling) {
+          scrollDone();
+          return;
+        } else {
+          setTimeout(() => {
+            ort += 1;
+            window.scrollTo({
+              top: ort,
+              behavior: "auto",
+            });
+            scrollDownUntilEndOfPage();
+          }, 12);
+        }
+      }
+
+      // REAGIERT NUR, WENN WIRKLICh GESCROLLT WIRD
+      // TODO: Check einbauen, der reload triggert, auch wenn die seite nicht gescrollt wird
+      window.onscroll = function () {
+        if (
+          window.innerHeight + window.pageYOffset >=
+          document.body.offsetHeight
+        ) {
+          isNotScrolling = true;
+          // alert("At the bottom!")
+        }
+      };
+
+      // Check if there is no scroll bar
+      // SOURCE: https://stackoverflow.com/a/2146903
+      if ($("body").height() <= $(window).height()) {
+        // alert("NO Vertical Scrollbar! D:");
+        scrollDone();
+      }
+
+      // ======================================================================================
+
+      setTimeout(() => {
+        isNotScrolling = false;
+        scrollDownUntilEndOfPage();
+      }, 4000);
+    });
+  }
+</script>
