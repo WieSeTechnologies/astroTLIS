@@ -11,9 +11,10 @@ const trnsRq = await fetch(
 const problems = await prblmRq.json();
 const translations = await trnsRq.json();
 
-function getTranslation(code, type) {
+function getTranslation(code, type, getDescription = false) {
   return translations.map(function (t) {
     if (t.code == code && t.type == type) {
+      if (getDescription) return t.description;
       return t.text;
     }
   });
