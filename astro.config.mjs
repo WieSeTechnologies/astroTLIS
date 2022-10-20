@@ -11,7 +11,7 @@ export default defineConfig({
   output: "server",
   adapter: deno({
     port: 8000,
-    hostname: "0.0.0.0"
+    hostname: "0.0.0.0",
   }),
-  integrations: [tailwind()]
+  integrations: [tailwind()],
 });
