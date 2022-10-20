@@ -39,9 +39,10 @@ function getTranslation(code, type, getDescription = false) {
       problems.map((problem) => (
         <tbody>
           <tr
-            class={`text-sm ${problem.status == 100 && "bg-green-200"} ${
-              problem.status >= 20 && problem.status <= 99 && "bg-yellow-200"
-            } ${problem.status >= 0 && problem.status <= 19 && "bg-red-200"}`}
+            class={`text-sm
+              ${problem.status == 100 && "bg-green-200"}
+              ${problem.status >= 20 && problem.status <= 99 && "bg-yellow-200"}
+              ${problem.status >= 0 && problem.status <= 19 && "bg-red-200"}`}
           >
             <td class="text-center py-4">{problem.room}</td>
             <td class="text-center py-4">
