@@ -1,0 +1,29 @@
+---
+export interface Props {
+  fehlerzahl?: string;
+}
+
+const { fehlerzahl = "<ERROR>" } = Astro.props as Props;
+---
+
+<div
+  class="fixed w-full top-0 left-0 text-4xl text-white pl-5 pt-3 pb-5 bg-red-600"
+>
+  <h1 class="w-screen">
+    <b>PGWV Fehlerportal</b><span class="inlineRight font-bold mr-8"
+      >{`${fehlerzahl} Fehler`}</span
+    >
+  </h1>
+</div>
+
+<style>
+  .inlineLeft,
+  .inlineRight {
+    position: absolute;
+    display: inline;
+  }
+
+  .inlineRight {
+    right: 0;
+  }
+</style>

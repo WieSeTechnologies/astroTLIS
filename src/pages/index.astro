@@ -1,7 +1,61 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../layouts/Footer.astro";
+
+const prblmRq = await fetch("http://fehlerapi.school.justus-seeck.de/problems");
+const trnsRq = await fetch(
+  "http://fehlerapi.school.justus-seeck.de/translations"
+);
+
+const problems = await prblmRq.json();
+const translations = await trnsRq.json();
+
+function getTranslation(code, type) {
+  return translations.map(function (t) {
+    if (t.code == code && t.type == type) {
+      return t.text;
+    }
+  });
+}
 ---
 
 <Layout>
-  <h1>Basic Layout</h1>
+  <Navbar fehlerzahl={problems.length.toString()} />
+  <h1 class="pt-[4.5rem]"></h1>
+
+  <table class="w-full">
+    <thead class="bg-slate-100 text-xs uppercase">
+      <tr>
+        <th class="text-center py-3" style="width: 7.5%">Raum</th>
+        <th class="text-center py-3" style="width: 55%">Fehler</th>
+        <th class="text-center py-3" style="width: 22.5%">Status</th>
+        <th class="text-center py-3" style="width: 15%">Datum</th>
+      </tr>
+    </thead>
+
+    {
+      problems.map((problem) => (
+        <tbody>
+          <tr class="text-sm">
+            <td class="text-center py-4">{problem.room}</td>
+            <td class="text-center py-4">
+              <b>{getTranslation(problem.category, "problemType")}</b>
+              <br />
+              {problem.problemDescription}
+            </td>
+            <td class="text-center py-4">
+              {getTranslation(problem.status, "problemStatus")}
+            </td>
+            <td class="text-center py-4">
+              {new Date(problem.date).toLocaleDateString()}
+            </td>
+          </tr>
+        </tbody>
+      ))
+    }
+  </table>
+
+  <Footer />
+  <div class="py-[16px]"></div>
 </Layout>
