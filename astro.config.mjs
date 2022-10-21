@@ -10,7 +10,7 @@ import tailwind from "@astrojs/tailwind";
 export default defineConfig({
   output: "server",
   adapter: deno({
-    port: 8000,
+    port: 4565,
     hostname: "0.0.0.0",
   }),
   integrations: [tailwind()],
