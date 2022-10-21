@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
 const prblmRq = await fetch("http://fehlerapi.school.justus-seeck.de/problems");
+// const prblmRq = await fetch("http://127.0.0.1:8000/problems");
 const trnsRq = await fetch(
   "http://fehlerapi.school.justus-seeck.de/translations"
 );
@@ -21,7 +22,7 @@ function getTranslation(code, type, getDescription = false) {
 }
 ---
 
-<Layout hideScrollbar={true}>
+<Layout hideScrollbar={true} hideCursor={false}>
   <Header fehlerzahl={problems.length.toString()} />
   <h1 class="pt-[4.5rem]"></h1>
 
