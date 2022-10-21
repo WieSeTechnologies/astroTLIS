@@ -3,8 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
-// const prblmRq = await fetch("http://fehlerapi.school.justus-seeck.de/problems");
-const prblmRq = await fetch("http://127.0.0.1:8000/problems");
+const prblmRq = await fetch("http://fehlerapi.school.justus-seeck.de/problems");
+// const prblmRq = await fetch("http://127.0.0.1:8000/problems");
 const trnsRq = await fetch(
   "http://fehlerapi.school.justus-seeck.de/translations"
 );
@@ -36,9 +36,9 @@ function getTranslation(code, type, getDescription = false) {
       </tr>
     </thead>
 
-    {
-      problems.map((problem) => (
-        <tbody>
+    <tbody>
+      {
+        problems.map((problem) => (
           <tr
             class={`text-sm
               ${problem.status == 100 && "bg-green-200"}
@@ -58,9 +58,9 @@ function getTranslation(code, type, getDescription = false) {
               {new Date(problem.date).toLocaleDateString()}
             </td>
           </tr>
-        </tbody>
-      ))
-    }
+        ))
+      }
+    </tbody>
   </table>
 
   <Footer />
