@@ -1,3 +1,3 @@
 export const SITE = {
-  version: "Beta 2.0.1",
+  version: "Beta 2.0.2",
 };
