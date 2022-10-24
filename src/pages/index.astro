@@ -3,14 +3,26 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
-const prblmRq = await fetch("http://fehlerapi.school.justus-seeck.de/problems");
-// const prblmRq = await fetch("http://127.0.0.1:8000/problems");
-const trnsRq = await fetch(
-  "http://fehlerapi.school.justus-seeck.de/translations"
-);
+// const prblmRq = await fetch("http://fehlerapi.school.justus-seeck.de/problems");
+// // const prblmRq = await fetch("http://127.0.0.1:8000/problems");
+// const trnsRq = await fetch(
+//   "http://fehlerapi.school.justus-seeck.de/translations"
+// );
+// const problems = await prblmRq.json();
+// const translations = await trnsRq.json();
 
-const problems = await prblmRq.json();
-const translations = await trnsRq.json();
+async function getData(url: string) {
+  let numberOfTries = 0;
+  try {
+    return await (await fetch(url)).json();
+  } catch (error) {
+    numberOfTries++;
+    if (numberOfTries <= 5) {
+      return;
+    }
+    return getData(url);
+  }
+}
 
 function getTranslation(code, type, getDescription = false) {
   return translations.map(function (t) {
@@ -20,6 +32,13 @@ function getTranslation(code, type, getDescription = false) {
     }
   });
 }
+
+const problems = await getData(
+  "http://fehlerapi.school.justus-seeck.de/problems"
+);
+const translations = await getData(
+  "http://fehlerapi.school.justus-seeck.de/translations"
+);
 ---
 
 <Layout hideScrollbar={true} hideCursor={false}>
