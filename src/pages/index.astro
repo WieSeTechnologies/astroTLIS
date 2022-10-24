@@ -16,7 +16,7 @@ async function getData(url: string) {
     return await (await fetch(url)).json();
   } catch (error) {
     numberOfTries++;
-    if (numberOfTries <= 5) {
+    if (numberOfTries <= 2) {
       return;
     }
     return getData(url);
