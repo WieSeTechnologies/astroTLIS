@@ -3,44 +3,27 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
-// const prblmRq = await fetch("http://fehlerapi.school.justus-seeck.de/problems");
-// const trnsRq = await fetch(
-//   "http://fehlerapi.school.justus-seeck.de/translations"
-// );
-// const problems = await prblmRq.json();
-// const translations = await trnsRq.json();
+let host = import.meta.env.DB_HOST;
+let user = import.meta.env.DB_USER;
+let pass = import.meta.env.DB_PASSWORD;
 
-async function getData(url: string) {
-  let numberOfTries = 0;
-  try {
-    return await (await fetch(url)).json();
-  } catch (error) {
-    numberOfTries++;
-    if (numberOfTries <= 2) {
-      return;
-    }
-    return getData(url);
-  }
-}
-const problems = await getData(
-  "http://fehlerapi.school.justus-seeck.de/problems"
-);
-const translations = await getData(
-  "http://fehlerapi.school.justus-seeck.de/translations"
-);
+var mysql = require("mysql");
 
-function getTranslation(code, type, getDescription = false) {
-  return translations.map(function (t) {
-    if (t.code == code && t.type == type) {
-      if (getDescription) return t.description;
-      return t.text;
-    }
-  });
-}
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "yourusername",
+  password: "yourpassword",
+});
+
+con.connect(function (err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
 ---
 
 <Layout hideScrollbar={true} hideCursor={false}>
-  <Header fehlerzahl={problems.length.toString()} />
+  <!-- <Header fehlerzahl={problems.length.toString()} /> -->
+  <Header fehlerzahl={69420} />
   <h1 class="pt-[4.5rem]"></h1>
 
   <table class="w-full">
@@ -53,7 +36,7 @@ function getTranslation(code, type, getDescription = false) {
       </tr>
     </thead>
 
-    <tbody>
+    <!-- <tbody>
       {
         problems.map((problem) => (
           <tr
@@ -77,7 +60,7 @@ function getTranslation(code, type, getDescription = false) {
           </tr>
         ))
       }
-    </tbody>
+    </tbody> -->
   </table>
 
   <Footer />
