@@ -3,27 +3,56 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
+import mysql from "mysql";
+
+async function getProblemAmount() {
+  await con.query(
+    "SELECT * FROM problems WHERE (`last_update` > now() - INTERVAL 7 day OR (`status` >= 10 AND `status` <= 99)) ORDER BY raum ASC",
+    function (err, results, fields) {
+      if (err) throw err;
+      console.log("There are " + results.length + " problems.");
+      return results.length;
+    }
+  );
+}
+
 let host = import.meta.env.DB_HOST;
 let user = import.meta.env.DB_USER;
-let pass = import.meta.env.DB_PASSWORD;
-
-var mysql = require("mysql");
+let password = import.meta.env.DB_PASSWORD;
+let dbName = import.meta.env.DB_NAME;
+let dbPort = import.meta.env.DB_PORT;
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "yourusername",
-  password: "yourpassword",
+  host: host,
+  port: dbPort,
+  user: user,
+  password: password,
+  database: dbName,
 });
 
-con.connect(function (err) {
+await con.connect(function (err) {
   if (err) throw err;
-  console.log("Connected!");
+  console.log("\n\nDatabase Connected!");
 });
+
+var problems = [];
+
+con.query(
+  "SELECT * FROM problems WHERE (`last_update` > now() - INTERVAL 7 day OR (`status` >= 10 AND `status` <= 99)) ORDER BY raum ASC",
+  function (err, results, fields) {
+    if (err) throw err;
+    problems = results;
+    console.log(results[0].raum);
+  }
+);
+
+console.log("LOLOLOLOOLOLOLOLOO: " + (await getProblemAmount()));
+con.end();
 ---
 
 <Layout hideScrollbar={true} hideCursor={false}>
   <!-- <Header fehlerzahl={problems.length.toString()} /> -->
-  <Header fehlerzahl={69420} />
+  <Header fehlerzahl={problems[0].raum} />
   <h1 class="pt-[4.5rem]"></h1>
 
   <table class="w-full">
