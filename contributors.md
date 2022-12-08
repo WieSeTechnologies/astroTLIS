@@ -1,4 +1,4 @@
-## Development
+## Development:
 
 - [AstragoDE](https://github.com/AstragoDE)
 - [byRaize](https://github.com/byRaize)

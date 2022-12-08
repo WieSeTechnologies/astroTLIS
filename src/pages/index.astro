@@ -21,7 +21,7 @@ var con = mysql.createConnection({
 
 await con.connect(function (err) {
   if (err) throw err;
-  console.log("Database Connected!");
+  // console.log("Database Connected!");
 });
 
 const getProblems = async () => {
@@ -36,7 +36,6 @@ const getProblems = async () => {
     );
   });
 };
-
 var problems;
 problems = await getProblems();
 
@@ -49,17 +48,28 @@ const getTranslations = async () => {
     });
   });
 };
-
 var translations;
 translations = await getTranslations();
 
 con.end();
 
+function fixCharacterEncoding(input) {
+  let output: string = String(input);
+  output = output.replace(/Ã¤/g, "ä");
+  output = output.replace(/Ã¶/g, "ö");
+  output = output.replace(/Ã¼/g, "ü");
+  output = output.replace(/Ã„/g, "Ä");
+  output = output.replace(/Ã–/g, "Ö");
+  output = output.replace(/Ãœ/g, "Ü");
+  output = output.replace(/ÃŸ/g, "ß");
+  return output;
+}
+
 function getTranslation(code, type, getDescription = false) {
   return translations.map(function (t) {
     if (t.code == code && t.type == type) {
       if (getDescription) return t.description;
-      return t.text;
+      return fixCharacterEncoding(t.text);
     }
   });
 }
@@ -97,7 +107,7 @@ function getTranslation(code, type, getDescription = false) {
             <td class="text-center py-4">
               <b>{getTranslation(problem.kategorie, "problemType")}</b>
               <br />
-              {problem.problembeschreibung}
+              {fixCharacterEncoding(problem.problembeschreibung)}
             </td>
             <td class="text-center py-4">
               {getTranslation(problem.status, "problemStatus")}
