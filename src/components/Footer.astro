@@ -3,30 +3,32 @@ import { SITE } from "../config.mjs";
 ---
 
 <footer class="fixed w-full bottom-0 left-0">
-  <div
-    class="bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e] text-white text-xs mt-1 p-2 w-full text-center"
-  >
-    <p class="inline">Version: {SITE.version}</p>
-    <p class="inline">|</p>
-    <p class="inline">
-      &#169; 2022 Justus Seeck & Joel Wiedemeier (Jahrgang 12, PGWV)
-    </p>
-    <img
-      class="inlineRight h-4 mr-2"
-      src="https://skillicons.dev/icons?i=astro,html,css,javascript"
-      alt="Astro, HTML, CSS, JavaScript"
-    />
-  </div>
-</footer>
+  <a href="./about">
+    <div
+      class="bg-gradient-to-r from-[#0f0c29] via-[#302b63] to-[#24243e] text-white text-xs mt-1 p-2 w-full text-center"
+    >
+      <p class="inline">Version: {SITE.version}</p>
+      <p class="inline">|</p>
+      <p class="inline">
+        &#169; 2022 Justus Seeck & Joel Wiedemeier (Jahrgang 12, PGWV)
+      </p>
+      <img
+        class="inlineRight h-4 mr-2"
+        src="https://skillicons.dev/icons?i=astro,html,css,javascript"
+        alt="Astro, HTML, CSS, JavaScript"
+      />
+    </div><a href="./about"> </a>
+  </a>
+</footer><a href="./about">
+  <style>
+    .inlineLeft,
+    .inlineRight {
+      position: absolute;
+      display: inline;
+    }
 
-<style>
-  .inlineLeft,
-  .inlineRight {
-    position: absolute;
-    display: inline;
-  }
-
-  .inlineRight {
-    right: 0;
-  }
-</style>
+    .inlineRight {
+      right: 0;
+    }
+  </style>
+</a>

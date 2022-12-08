@@ -3,45 +3,86 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
-// const prblmRq = await fetch("http://fehlerapi.school.justus-seeck.de/problems");
-// const trnsRq = await fetch(
-//   "http://fehlerapi.school.justus-seeck.de/translations"
-// );
-// const problems = await prblmRq.json();
-// const translations = await trnsRq.json();
+import mysql from "mysql";
 
-async function getData(url: string) {
-  let numberOfTries = 0;
-  try {
-    return await (await fetch(url)).json();
-  } catch (error) {
-    numberOfTries++;
-    if (numberOfTries <= 2) {
-      return;
-    }
-    return getData(url);
-  }
+let host = import.meta.env.DB_HOST;
+let user = import.meta.env.DB_USER;
+let password = import.meta.env.DB_PASSWORD;
+let dbName = import.meta.env.DB_NAME;
+let dbPort = import.meta.env.DB_PORT;
+
+var con = mysql.createConnection({
+  host: host,
+  port: dbPort,
+  user: user,
+  password: password,
+  database: dbName,
+});
+
+await con.connect(function (err) {
+  if (err) throw err;
+  // console.log("Database Connected!");
+});
+
+const getProblems = async () => {
+  return new Promise((resolve, reject) => {
+    con.query(
+      "SELECT * FROM problems WHERE (`last_update` > now() - INTERVAL 7 day OR (`status` >= 10 AND `status` <= 99)) ORDER BY raum ASC",
+      function (err, results, fields) {
+        if (err) reject(err);
+        if (err) throw err;
+        resolve(results);
+      }
+    );
+  });
+};
+var problems;
+problems = await getProblems();
+
+const getTranslations = async () => {
+  return new Promise((resolve, reject) => {
+    con.query("SELECT * FROM translations", function (err, results, fields) {
+      if (err) reject(err);
+      if (err) throw err;
+      resolve(results);
+    });
+  });
+};
+var translations;
+translations = await getTranslations();
+
+con.end();
+
+function fixCharacterEncoding(input) {
+  let output: string = String(input);
+  output = output.replace(/Ã¤/g, "ä");
+  output = output.replace(/Ã¶/g, "ö");
+  output = output.replace(/Ã¼/g, "ü");
+  output = output.replace(/Ã„/g, "Ä");
+  output = output.replace(/Ã–/g, "Ö");
+  output = output.replace(/Ãœ/g, "Ü");
+  output = output.replace(/ÃŸ/g, "ß");
+  return output;
 }
-const problems = await getData(
-  "http://fehlerapi.school.justus-seeck.de/problems"
-);
-const translations = await getData(
-  "http://fehlerapi.school.justus-seeck.de/translations"
-);
 
 function getTranslation(code, type, getDescription = false) {
   return translations.map(function (t) {
     if (t.code == code && t.type == type) {
       if (getDescription) return t.description;
-      return t.text;
+      return fixCharacterEncoding(t.text);
     }
   });
 }
 ---
 
 <Layout hideScrollbar={true} hideCursor={false}>
-  <Header fehlerzahl={problems.length.toString()} />
+  <Header fehlerzahl={String(problems.length)} />
   <h1 class="pt-[4.5rem]"></h1>
+
+  <!-- {JSON.stringify(problems)} -->
+  <!-- {problems[0].raum} -->
+
+  <p></p>
 
   <table class="w-full">
     <thead class="bg-slate-100 text-xs uppercase">
@@ -62,17 +103,21 @@ function getTranslation(code, type, getDescription = false) {
               ${problem.status >= 20 && problem.status <= 99 && "bg-yellow-200"}
               ${problem.status >= 0 && problem.status <= 19 && "bg-red-200"}`}
           >
-            <td class="text-center py-4">{problem.room}</td>
+            <td class="text-center py-4">{problem.raum}</td>
             <td class="text-center py-4">
-              <b>{getTranslation(problem.category, "problemType")}</b>
+              <b>{getTranslation(problem.kategorie, "problemType")}</b>
               <br />
-              {problem.problemDescription}
+              {fixCharacterEncoding(problem.problembeschreibung)}
             </td>
             <td class="text-center py-4">
               {getTranslation(problem.status, "problemStatus")}
             </td>
             <td class="text-center py-4">
-              {new Date(problem.date).toLocaleDateString()}
+              {new Date(problem.datum).toLocaleDateString("DE-de", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
             </td>
           </tr>
         ))
@@ -90,6 +135,7 @@ function getTranslation(code, type, getDescription = false) {
   // CONFIGURATION:
   let enableScrolling = true;
 
+  // CODE:
   if (enableScrolling) {
     $(document).ready(function () {
       var isNotScrolling = true;
