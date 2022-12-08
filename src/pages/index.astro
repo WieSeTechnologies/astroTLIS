@@ -21,10 +21,9 @@ var con = mysql.createConnection({
 
 await con.connect(function (err) {
   if (err) throw err;
-  console.log("\n\nDatabase Connected!");
+  console.log("Database Connected!");
 });
 
-// shit aint working :(
 const getProblems = async () => {
   return new Promise((resolve, reject) => {
     con.query(
@@ -38,25 +37,35 @@ const getProblems = async () => {
   });
 };
 
-const problems = await getProblems();
+var problems;
+problems = await getProblems();
 
-// let problems;
-// console.log(
-//   con.query(
-//     "SELECT * FROM problems WHERE (`last_update` > now() - INTERVAL 7 day OR (`status` >= 10 AND `status` <= 99)) ORDER BY raum ASC",
-//     function (err, results, fields) {
-//       if (err) throw err;
-//       // problems = results;
-//       return results;
-//     }
-//   )
-// );
+const getTranslations = async () => {
+  return new Promise((resolve, reject) => {
+    con.query("SELECT * FROM translations", function (err, results, fields) {
+      if (err) reject(err);
+      if (err) throw err;
+      resolve(results);
+    });
+  });
+};
+
+var translations;
+translations = await getTranslations();
 
 con.end();
+
+function getTranslation(code, type, getDescription = false) {
+  return translations.map(function (t) {
+    if (t.code == code && t.type == type) {
+      if (getDescription) return t.description;
+      return t.text;
+    }
+  });
+}
 ---
 
 <Layout hideScrollbar={true} hideCursor={false}>
-  <!-- <Header fehlerzahl={problems.length.toString()} /> -->
   <Header fehlerzahl={String(problems.length)} />
   <h1 class="pt-[4.5rem]"></h1>
 
@@ -75,7 +84,7 @@ con.end();
       </tr>
     </thead>
 
-    <!-- <tbody>
+    <tbody>
       {
         problems.map((problem) => (
           <tr
@@ -84,22 +93,22 @@ con.end();
               ${problem.status >= 20 && problem.status <= 99 && "bg-yellow-200"}
               ${problem.status >= 0 && problem.status <= 19 && "bg-red-200"}`}
           >
-            <td class="text-center py-4">{problem.room}</td>
+            <td class="text-center py-4">{problem.raum}</td>
             <td class="text-center py-4">
-              <b>{getTranslation(problem.category, "problemType")}</b>
+              <b>{getTranslation(problem.kategorie, "problemType")}</b>
               <br />
-              {problem.problemDescription}
+              {problem.problembeschreibung}
             </td>
             <td class="text-center py-4">
               {getTranslation(problem.status, "problemStatus")}
             </td>
             <td class="text-center py-4">
-              {new Date(problem.date).toLocaleDateString()}
+              {new Date(problem.datum).toLocaleDateString()}
             </td>
           </tr>
         ))
       }
-    </tbody> -->
+    </tbody>
   </table>
 
   <Footer />
@@ -110,8 +119,9 @@ con.end();
   import $ from "jquery";
 
   // CONFIGURATION:
-  let enableScrolling = false;
+  let enableScrolling = true;
 
+  // CODE:
   if (enableScrolling) {
     $(document).ready(function () {
       var isNotScrolling = true;
