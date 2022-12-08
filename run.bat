@@ -1,1 +1,3 @@
-deno run --allow-net --allow-read --allow-env ./dist/server/entry.mjs
+set HOST=0.0.0.0
+set PORT=4565
+node ./dist/server/entry.mjs

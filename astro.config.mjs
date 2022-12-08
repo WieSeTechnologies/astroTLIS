@@ -1,17 +1,16 @@
 import { defineConfig } from "astro/config";
 
 // https://astro.build/config
-import deno from "@astrojs/deno";
+import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
-import tailwind from "@astrojs/tailwind";
+import node from "@astrojs/node";
 
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  adapter: deno({
-    port: 4565,
-    hostname: "0.0.0.0",
+  adapter: node({
+    mode: "standalone",
   }),
   integrations: [tailwind()],
 });
