@@ -113,7 +113,11 @@ function getTranslation(code, type, getDescription = false) {
               {getTranslation(problem.status, "problemStatus")}
             </td>
             <td class="text-center py-4">
-              {new Date(problem.datum).toLocaleDateString()}
+              {new Date(problem.datum).toLocaleDateString("DE-de", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
             </td>
           </tr>
         ))
