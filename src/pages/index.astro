@@ -62,6 +62,7 @@ function fixCharacterEncoding(input) {
   output = output.replace(/Ã–/g, "Ö");
   output = output.replace(/Ãœ/g, "Ü");
   output = output.replace(/ÃŸ/g, "ß");
+  output = output.replace(/â€¦/g, "…");
   return output;
 }
 
@@ -137,7 +138,7 @@ function getTranslation(code, type, getDescription = false) {
 
   // CODE:
   if (enableScrolling) {
-    $(document).ready(function () {
+    $(function () {
       var isNotScrolling = true;
       var ort = 0;
 

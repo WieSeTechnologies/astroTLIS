@@ -1,3 +1,4 @@
 export const SITE = {
-  version: "Beta 2.1.0",
+  version: "1.0.0 RC1",
+  copyright_year: "2023",
 };
