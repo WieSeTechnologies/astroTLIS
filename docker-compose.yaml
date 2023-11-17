@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  node-server:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3306:3306
+      - 1701:4321
