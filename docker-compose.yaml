@@ -8,4 +8,4 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3306:3306
-      - 4321:4321
+      - 1701:4321
