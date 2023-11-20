@@ -9,8 +9,8 @@ RUN npm run build
 
 # Node Server
 ENV HOST=0.0.0.0
-ENV PORT=4321
-EXPOSE 4321
+ENV PORT=80
+EXPOSE 80
 
 # DB Server
 EXPOSE 3306
