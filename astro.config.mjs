@@ -13,4 +13,5 @@ export default defineConfig({
     mode: "standalone",
   }),
   integrations: [tailwind()],
+  server: { host: true },
 });
